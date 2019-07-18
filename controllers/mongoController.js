@@ -13,9 +13,11 @@ const db = require("../models");
 // A GET route for scraping the echoJS website
 router.get("/scrape", (req, res) => {
   // First, we grab the body of the html with axios
+  console.log("........ scraping");
   axios.get("https://www.gamespot.com/").then((response) => {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     const $ = cheerio.load(response.data);
+    console.log("..... scrape,got data back");
 
     // Now, we grab every h2 within an article tag, and do the following:
     $("article.media-article").each(function(i, element) {

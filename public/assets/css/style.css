@@ -1,0 +1,27 @@
+
+body {
+  background-image: url("../img/bg.jpg");
+
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.jumbotron, .work-area {
+  background-color: rgba(233, 215, 115, 0.7);
+}
+
+.container-fluid {
+  width: 80vw;
+}
+
+.work-area {
+  border-radius: 5px;
+  height: 83vh;
+  overflow-y: auto;
+}
+
+.btn-save {
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
+}

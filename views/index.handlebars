@@ -1,0 +1,18 @@
+<div class="container-fluid cont-articles">
+  {{#each articles}}
+  <div class="card my-3" data-id="{{_id}}">
+    <div class="row no-gutters">
+      <div class="col-md-3">
+        <img src="{{image}}" class="card-img" alt="...">
+      </div>
+      <div class="col-md-9">
+        <div class="card-body">
+          <h5><a class="card-title" target="_blank" href="{{link}}">{{title}}</a></h5>
+          <p class="card-text">{{summary}}</p>
+          <button class="btn btn-success btn-save">Save Article</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>

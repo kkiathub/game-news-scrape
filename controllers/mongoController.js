@@ -20,6 +20,7 @@ router.get("/scrape", (req, res) => {
     console.log("..... scrape,got data back");
 
     // Now, we grab every h2 within an article tag, and do the following:
+    var numRec = $("article.media-article").length;
     $("article.media-article").each(function(i, element) {
       // Save an empty result object
       const result = {};
@@ -43,6 +44,12 @@ router.get("/scrape", (req, res) => {
         .then((dbArticle) => {
           // View the added result in the console
           console.log(dbArticle);
+          console.log("current I" + i);
+          if (i== numRec-1) {
+            console.log("get here... doone");
+            res.send("Scrape Complete");
+
+          }
         })
         .catch((err) => {
           // If an error occurred, log it
@@ -51,7 +58,7 @@ router.get("/scrape", (req, res) => {
     });
 
     // Send a message to the client
-    res.send("Scrape Complete");
+    // res.send("Scrape Complete");
   });
 });
 

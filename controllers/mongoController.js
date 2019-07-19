@@ -70,7 +70,7 @@ function findArticles(bSaved, handlebar, res) {
       const hbsObject = {
         articles: dbArticle
       };
-      res.render(handlebar , hbsObject);
+      res.render(handlebar, hbsObject);
 
     })
     .catch((err) => {
@@ -98,9 +98,7 @@ router.delete("/api/clear", (req, res) => {
 });
 
 router.put("/api/save/:id", (req, res) => {
-  console.log("get save route");
-  console.log("id " + req.params.id);
-  console.log(req.body);
+
   db.Article.findOneAndUpdate({ _id: req.params.id }, { $set: req.body })
     .then((dbArticle) => {
       // If the User was updated successfully, send it back to the client
@@ -127,48 +125,44 @@ router.get("/articles/:id", (req, res) => {
   // Finish the route so it finds one article using the req.params.id,
   // and run the populate method with "note",
   // then responds with the article with the note included
-  db.Article.findOne(  { _id: req.params.id })
-  .populate("notes")
-  .then((dbArticle) => {
-    // If all Notes are successfully found, send them back to the client
-    console.log(dbArticle);
-    res.json(dbArticle);
-  })
-  .catch((err) => {
-    // If an error occurs, send the error back to the client
-    res.json(err);
-  });
-});
-/*
-router.post("/api/cats", (req, res) => {
-  cat.create(["name", "sleepy"], [req.body.name, req.body.sleepy], result => {
-    // Send back the ID of the new quote
-    res.json({ id: result.insertId });
-  });
-});
-
-router.put("/api/cats/:id", (req, res) => {
-  const condition = "id = " + req.params.id;
-
-  console.log("condition", condition);
-
-  cat.update(
-    {
-      sleepy: req.body.sleepy
-    },
-    condition,
-    result => {
-      if (result.changedRows === 0) {
-        // If no rows were changed, then the ID must not exist, so 404
-        return res.status(404).end();
-      }
-      res.status(200).end();
-
-    }
-  );
+  db.Article.findOne({ _id: req.params.id })
+    .populate("notes")
+    .then((dbArticle) => {
+      // If all Notes are successfully found, send them back to the client
+      console.log(dbArticle);
+      res.json(dbArticle);
+    })
+    .catch((err) => {
+      // If an error occurs, send the error back to the client
+      res.json(err);
+    });
 });
 
 
-*/
+// Route for saving/updating an Article's associated Note
+router.post("/articles/:id", (req, res) => {
+
+  db.Note.create(req.body)
+    .then((dbNote) => {
+      // then find an article from the req.params.id
+      // and update it's "note" property with the _id of the new note
+
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { notes: dbNote._id } }, { new: true });
+    })
+    .then((dbArticle) => {
+      // If the User was updated successfully, send it back to the client
+      return db.Article.findOne({ _id: req.params.id }).populate("notes");
+    })
+    .then((dbArticle) => {
+      // If all Notes are successfully found, send them back to the client
+      console.log(dbArticle);
+      res.json(dbArticle);
+    })
+    .catch((err) => {
+      // If an error occurs, send it back to the client
+      res.status(500).json(err);
+    });
+});
+
 // Export routes for server.js to use.
 module.exports = router;

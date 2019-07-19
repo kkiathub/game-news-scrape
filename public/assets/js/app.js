@@ -52,80 +52,81 @@ $(function () {
     })
       // With that done, add the note information to the page
       .then((data) => {
-        console.log(data);
-        // The title of the article
-
-
         // add note
-        $("#note-title").text($(this).parent().find(".card-title").text());
+        populateNote(data);
+
+        // The title of the article
+        $("#btn-note-save").attr("data-id", data._id);
+        $("#note-title").text(data.title);
+        $("#note-content").val("");
         $("#note-modal").modal("toggle");
       });
   });
 
-  // --------------------- kktodo
-  // not used fn;
-  // Whenever someone clicks a p tag
-  $(document).on("click", "p", function () {
-    // Empty the notes from the note section
-    $("#notes").empty();
-    // Save the id from the p tag
-    var thisId = $(this).attr("data-id");
 
-    // Now make an ajax call for the Article
-    $.ajax({
-      method: "GET",
-      url: "/articles/" + thisId
-    })
-      // With that done, add the note information to the page
-      .then((data) => {
-        console.log(data);
-        // The title of the article
-        $("#notes").append("<h2>" + data.title + "</h2>");
-        // An input to enter a new title
-        $("#notes").append("<input id='titleinput' name='title' >");
-        // A textarea to add a new note body
-        $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-        // A button to submit a new note, with the id of the article saved to it
-        $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+  function populateNote(data) {
+    console.log("populateNote");
+    console.log(data);
+    if (!data.notes || data.notes.length == 0)
+      return;
 
-        // If there's a note in the article
-        if (data.note) {
-          console.log(data.note);
-          // Place the title of the note in the title input
-          $("#titleinput").val(data.note.title);
-          // Place the body of the note in the body textarea
-          $("#bodyinput").val(data.note.body);
-        }
-      });
-  });
+    var noteElem = $(".note-body");
+    noteElem.empty();
+    for (let i = 0; i < data.notes.length; i++) {
+      let newRow = $("<div>");
+      newRow.addClass("row mb-1");
 
-  // When you click the savenote button
-  $(document).on("click", "#savenote", function () {
-    // Grab the id associated with the article from the submit button
+      let newCol = $("<div>");
+      newCol.addClass("col-11");
+      newCol.append("<p>" + data.notes[i].note + "</p>");
+      newRow.append(newCol);
+
+      newCol = $("<div>");
+      newCol.addClass("col-1");
+      let newButton = $("<button>");
+      newButton.addClass("btn btn-danger btn-note-delete");
+      newButton.text("x");
+      newCol.append(newButton);
+      newRow.append(newCol);
+
+      noteElem.append(newRow);
+
+    }
+
+    $(".modal-footer p").text("Total Notes: " + data.notes.length);
+
+  }
+
+  $("#btn-note-save").on("click", function () {
+    if ( $("#note-content").val().trim().length===0 ) {
+      console.log("null string");
+      return;
+    }
+
     var thisId = $(this).attr("data-id");
 
     // Run a POST request to change the note, using what's entered in the inputs
     $.ajax({
       method: "POST",
       url: "/articles/" + thisId,
-      data: {
-        // Value taken from title input
-        title: $("#titleinput").val(),
-        // Value taken from note textarea
-        body: $("#bodyinput").val()
-      }
+      // Value taken from textarea
+      data: { note: $("#note-content").val().trim() }
     })
       // With that done
       .then((data) => {
         // Log the response
         console.log(data);
         // Empty the notes section
-        $("#notes").empty();
+        populateNote(data);
       });
 
     // Also, remove the values entered in the input and textarea for note entry
-    $("#titleinput").val("");
-    $("#bodyinput").val("");
+    $("#note-content").val("");
+  });
+
+
+  $(".btn-note-delete").on("click", function () {
+    console.log("test delete");
   });
 
 });

@@ -60,20 +60,19 @@
 						<h5 class="modal-title"><strong>Note for Article</strong></h5>
 						<h6 id="note-title"></h6>
 					</div>
-					<form id="devour-form">
-						<div class="form-group">
-							<div class="modal-body">
-								<label for="customer-name">Enter customer name</label>
-								<input class="form-control" id="customer-name" type="text" placeholder="name..."
-									required>
-							</div>
-							<div class="modal-footer">
-								<button type="button" id="btn-note" class="btn btn-success">Add Note</button>
-								{{!-- <button type="button" id="btn-submit" class="btn btn-success">Submit</button> --}}
-								<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-							</div>
+
+					<div class="modal-body">
+						<div class="note-body container mb-2">
+
 						</div>
-					</form>
+						<textarea id="note-content" placeholder="New Note" rows="3" cols="63" required></textarea>
+					</div>
+					<div class="modal-footer">
+						<p class="my-0"></p>
+						<button type="button" id="btn-note-save" class="btn btn-success">Add Note</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					</div>
+
 				</div>
 			</div>
 		</div>

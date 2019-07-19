@@ -25,3 +25,17 @@ body {
   bottom: 6px;
   right: 10px;
 }
+
+.note-body .row {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.btn-note-delete {
+  padding: 0px 5px;
+}
+
+.note-body {
+  height: 40vh;
+  overflow-y: auto;
+}

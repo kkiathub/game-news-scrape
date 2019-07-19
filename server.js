@@ -39,26 +39,6 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 
 
-// Route for saving/updating an Article's associated Note
-app.post("/articles/:id", (req, res) => {
-  // TODO
-
-  db.Note.create(req.body)
-  .then((dbNote) => {
-    // then find an article from the req.params.id
-    // and update it's "note" property with the _id of the new note
-
-    return db.Article.findOneAndUpdate( { _id: req.params.id }, { $set: { note: dbNote._id } }, { new: true });
-  })
-  .then((dbArticle) => {
-    // If the User was updated successfully, send it back to the client
-    res.json(dbArticle);
-  })
-  .catch((err) => {
-    // If an error occurs, send it back to the client
-    res.status(500).json(err);
-  });
-});
 
 // Start the server
 app.listen(PORT, () => {

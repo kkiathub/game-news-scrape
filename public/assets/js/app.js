@@ -18,6 +18,53 @@ $(function () {
     );
   });
 
+  function updateSaved( id, bSaved) {
+    $.ajax({
+      method: "PUT",
+      url: "/api/save/" + id,
+      data: {
+        issaved: bSaved
+      }
+    })
+    .then(
+      function (result) {
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  }
+
+  $(".btn-save").on("click", function () {
+    // var thisId = $(this).attr("data-id");
+    updateSaved( $(this).attr("data-id"), true);
+    // console.log(thisId);
+    // $.ajax({
+    //   method: "PUT",
+    //   url: "/api/save/" + thisId,
+    //   data: {
+    //     issaved: true
+    //   }
+    // })
+    // .then(
+    //   function (result) {
+    //     // Reload the page to get the updated list
+    //     location.reload();
+    //   }
+    // );
+  });
+  
+  $(".btn-remove").on("click", function () {
+    // remove from saved list.
+    updateSaved( $(this).attr("data-id"), false);
+
+  });
+
+  $(".btn-note").on("click", function () {
+    // add note
+  });
+    
+// --------------------- kktodo
+// not used fn;
   // Whenever someone clicks a p tag
   $(document).on("click", "p", function () {
     // Empty the notes from the note section

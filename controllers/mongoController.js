@@ -13,27 +13,17 @@ const db = require("../models");
 // A GET route for scraping the echoJS website
 router.get("/scrape", (req, res) => {
   // First, we grab the body of the html with axios
-  console.log("........ scraping");
-  // axios.get("https://www.gamespot.com/").then((response) => {
   axios.get("https://www.gameinformer.com/features").then((response) => {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     const $ = cheerio.load(response.data);
-    console.log("..... scrape,got data back");
 
     // Now, we grab every h2 within an article tag, and do the following:
     var numRec = $("article.node--type-article").length;
-    console.log("num rec : " + numRec);
-    $("article.node--type-article").each(function(i, element) {
+    $("article.node--type-article").each(function (i, element) {
       // Save an empty result object
       const result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
-      console.log("..... " + i + "........");
-      console.log($(this).find(".field--name-title").text());
-      console.log( $(this).find(".field--name-field-promo-summary").text());
-      console.log($(this).find("a").attr("href"));
-      console.log($(this).find("img").attr("src"));
-      console.log("...........................");
 
       result.title = $(this)
         .find(".field--name-title")
@@ -53,43 +43,48 @@ router.get("/scrape", (req, res) => {
         .then((dbArticle) => {
           // View the added result in the console
           // console.log(dbArticle);
-          console.log("current I " + i);
-        
-          if (i== numRec-1) {
+
+          if (i == numRec - 1) {
             console.log("get here... doone");
             res.send("Scrape Complete");
-
           }
         })
         .catch((err) => {
-          // If an error occurred, log it
-          // console.log(err);
+          console.log(err);
         });
     });
 
     // Send a message to the client
     // res.send("Scrape Complete");
   })
-  .catch(err => {
-    console.log(err);
-  });
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 // Create all our routes and set up logic within those routes where required.
-router.get("/", (req, res) => {
-  db.Article.find({})
-  .then((dbArticle) => {
-    // If all Users are successfully found, send them back to the client
-    const hbsObject = {
-      articles: dbArticle
-    };
-    res.render("index", hbsObject);
+function findArticles(bSaved, handlebar, res) {
+  db.Article.find({ issaved: bSaved })
+    .then((dbArticle) => {
+      // If all Users are successfully found, send them back to the client
+      const hbsObject = {
+        articles: dbArticle
+      };
+      res.render(handlebar , hbsObject);
 
-  })
-  .catch((err) => {
-    // If an error occurs, send the error back to the client
-    res.json(err);
-  });
+    })
+    .catch((err) => {
+      // If an error occurs, send the error back to the client
+      res.json(err);
+    });
+}
+
+router.get("/", (req, res) => {
+  findArticles(false, "index", res);
+});
+
+router.get("/saved", (req, res) => {
+  findArticles(true, "saved", res);
 });
 
 // delete all documents in Article.
@@ -100,6 +95,30 @@ router.delete("/api/clear", (req, res) => {
       res.status(200).end();
     }
   );
+});
+
+router.put("/api/save/:id", (req, res) => {
+  console.log("get save route");
+  console.log("id " + req.params.id);
+  console.log(req.body);
+  db.Article.findOneAndUpdate({ _id: req.params.id }, { $set: req.body })
+    .then((dbArticle) => {
+      // If the User was updated successfully, send it back to the client
+      console.log("update success");
+      return db.Article.find({ issaved: true });
+    })
+    .then((dbArticle) => {
+      // If all Users are successfully found, send them back to the client
+      const hbsObject = {
+        articles: dbArticle
+      };
+      res.render("index", hbsObject);
+    })
+    .catch((err) => {
+      // If an error occurs, send it back to the client
+      res.status(500).json(err);
+    });
+
 });
 /*
 router.post("/api/cats", (req, res) => {

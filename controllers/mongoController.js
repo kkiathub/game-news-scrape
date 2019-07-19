@@ -14,26 +14,35 @@ const db = require("../models");
 router.get("/scrape", (req, res) => {
   // First, we grab the body of the html with axios
   console.log("........ scraping");
-  axios.get("https://www.gamespot.com/").then((response) => {
+  // axios.get("https://www.gamespot.com/").then((response) => {
+  axios.get("https://www.gameinformer.com/features").then((response) => {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     const $ = cheerio.load(response.data);
     console.log("..... scrape,got data back");
 
     // Now, we grab every h2 within an article tag, and do the following:
-    var numRec = $("article.media-article").length;
-    $("article.media-article").each(function(i, element) {
+    var numRec = $("article.node--type-article").length;
+    console.log("num rec : " + numRec);
+    $("article.node--type-article").each(function(i, element) {
       // Save an empty result object
       const result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
+      console.log("..... " + i + "........");
+      console.log($(this).find(".field--name-title").text());
+      console.log( $(this).find(".field--name-field-promo-summary").text());
+      console.log($(this).find("a").attr("href"));
+      console.log($(this).find("img").attr("src"));
+      console.log("...........................");
+
       result.title = $(this)
-        .find(".media-title")
+        .find(".field--name-title")
         .text();
       result.summary = $(this)
-        .find(".media-deck")
+        .find(".field--name-field-promo-summary")
         .text();
-      result.link = "https://www.gamespot.com" + $(this)
-        .children("a")
+      result.link = "https://www.gameinformer.com" + $(this)
+        .find("a")
         .attr("href");
       result.image = $(this)
         .find("img")
@@ -43,8 +52,9 @@ router.get("/scrape", (req, res) => {
       db.Article.create(result)
         .then((dbArticle) => {
           // View the added result in the console
-          console.log(dbArticle);
-          console.log("current I" + i);
+          // console.log(dbArticle);
+          console.log("current I " + i);
+        
           if (i== numRec-1) {
             console.log("get here... doone");
             res.send("Scrape Complete");
@@ -53,7 +63,7 @@ router.get("/scrape", (req, res) => {
         })
         .catch((err) => {
           // If an error occurred, log it
-          console.log(err);
+          // console.log(err);
         });
     });
 

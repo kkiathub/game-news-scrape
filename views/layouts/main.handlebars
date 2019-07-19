@@ -5,12 +5,12 @@
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-	<link rel="stylesheet" href="/assets/css/style.css" type="text/css" />
 	<title>GameInformer Scraper</title>
 	<script src="https://code.jquery.com/jquery.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
 	<script src="/assets/js/app.js"></script>
+	<link rel="stylesheet" href="/assets/css/style.css" type="text/css" />
+
 </head>
 
 <body>
@@ -27,18 +27,20 @@
 				<div class="navbar-collapse collapse" id="navbarColor01" style="">
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="/">All
+							<a class="nav-link {{#if isAll}}active{{/if}}" href="/">All
 								<span class="sr-only">(current)</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/saved">Saved Articles
+							<a class="nav-link {{#unless isAll}}active{{/unless}}" href="/saved">Saved Articles
 								<span class="sr-only">(current)</span>
 							</a>
 						</li>
+						{{#if isAll}}
 						<li class="nav-item">
 							<a class="btn btn-danger btn-scrape mr-2">SCRAPE NEW ARTICLES!</a>
 						</li>
+						{{/if}}
 						<li class="nav-item">
 							<a class="btn btn-danger btn-clear">CLEAR ARTICLES!</a>
 						</li>
@@ -77,6 +79,7 @@
 			</div>
 		</div>
 	</div>
+
 </body>
 
 </html>

@@ -39,3 +39,7 @@ body {
   height: 40vh;
   overflow-y: auto;
 }
+
+.btn-scrape, .btn-clear {
+  font-weight: bold;
+}

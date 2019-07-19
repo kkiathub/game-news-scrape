@@ -65,13 +65,15 @@ $(function () {
 
 
   function populateNote(data) {
-    console.log("populateNote");
-    console.log(data);
-    if (!data.notes || data.notes.length == 0)
-      return;
-
     var noteElem = $(".note-body");
     noteElem.empty();
+    
+    
+    if (!data.notes || data.notes.length == 0) {
+      
+      $(".modal-footer p").text("Total Notes: 0");
+      return;
+    }
     for (let i = 0; i < data.notes.length; i++) {
       let newRow = $("<div>");
       newRow.addClass("row mb-1");
@@ -85,6 +87,7 @@ $(function () {
       newCol.addClass("col-1");
       let newButton = $("<button>");
       newButton.addClass("btn btn-danger btn-note-delete");
+      newButton.attr("note-id", data.notes[i]._id);
       newButton.text("x");
       newCol.append(newButton);
       newRow.append(newCol);
@@ -98,8 +101,7 @@ $(function () {
   }
 
   $("#btn-note-save").on("click", function () {
-    if ( $("#note-content").val().trim().length===0 ) {
-      console.log("null string");
+    if ($("#note-content").val().trim().length === 0) {
       return;
     }
 
@@ -113,7 +115,7 @@ $(function () {
       data: { note: $("#note-content").val().trim() }
     })
       // With that done
-      .then((data) => {
+      .then(data => {
         // Log the response
         console.log(data);
         // Empty the notes section
@@ -124,9 +126,22 @@ $(function () {
     $("#note-content").val("");
   });
 
+  function deleteNote() {
+    var noteId = $(this).attr("note-id");
+    var dataId = $("#btn-note-save").attr("data-id");
+    console.log("fe => dataId: " + dataId + " - noteId: " + noteId);
 
-  $(".btn-note-delete").on("click", function () {
-    console.log("test delete");
-  });
+    $.ajax("/api/delete/" + dataId + "/" + noteId, {
+      type: 'DELETE'
+    }).then(data => {
+      // Reload the page to get the updated list
+      // location.reload();
+      populateNote(data);
+    }
+    );
+
+  }
+  
+   $(document).on("click", ".btn-note-delete", deleteNote);
 
 });

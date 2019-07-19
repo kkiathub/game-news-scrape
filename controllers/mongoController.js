@@ -68,7 +68,9 @@ function findArticles(bSaved, handlebar, res) {
     .then((dbArticle) => {
       // If all Users are successfully found, send them back to the client
       const hbsObject = {
-        articles: dbArticle
+        articles: dbArticle,
+        isAll: handlebar==="index"
+
       };
       res.render(handlebar, hbsObject);
 
@@ -108,7 +110,8 @@ router.put("/api/save/:id", (req, res) => {
     .then((dbArticle) => {
       // If all Users are successfully found, send them back to the client
       const hbsObject = {
-        articles: dbArticle
+        articles: dbArticle,
+        isAll: true
       };
       res.render("index", hbsObject);
     })
@@ -129,7 +132,6 @@ router.get("/articles/:id", (req, res) => {
     .populate("notes")
     .then((dbArticle) => {
       // If all Notes are successfully found, send them back to the client
-      console.log(dbArticle);
       res.json(dbArticle);
     })
     .catch((err) => {
@@ -155,13 +157,35 @@ router.post("/articles/:id", (req, res) => {
     })
     .then((dbArticle) => {
       // If all Notes are successfully found, send them back to the client
-      console.log(dbArticle);
       res.json(dbArticle);
     })
     .catch((err) => {
       // If an error occurs, send it back to the client
       res.status(500).json(err);
     });
+});
+
+// route for delete
+router.delete("/api/delete/:articleId/:noteId", (req, res) => {
+
+  // delete note by noteId
+  db.Note.remove({ _id: req.params.noteId})
+  .then( dbDeleted => {
+    // If the note was deleted successfully, update the article.
+    return db.Article.update( { _id: req.params.articleId }, { $pull: { notes: req.params.noteId } });
+  })
+  .then((error, dbUpdated) => {
+    return db.Article.findOne({ _id: req.params.articleId }).populate("notes");
+    // If all Notes are successfully found, send them back to the client
+  })
+  .then((dbArticle) => {
+    // If all Notes are successfully found, send them back to the client
+    res.json(dbArticle);
+  })
+  .catch((err) => {
+    // If an error occurs, send it back to the client
+    res.status(500).json(err);
+  });
 });
 
 // Export routes for server.js to use.

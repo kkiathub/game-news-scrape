@@ -120,6 +120,25 @@ router.put("/api/save/:id", (req, res) => {
     });
 
 });
+
+// Route for grabbing a specific Article by id, populate it with it's note
+router.get("/articles/:id", (req, res) => {
+
+  // Finish the route so it finds one article using the req.params.id,
+  // and run the populate method with "note",
+  // then responds with the article with the note included
+  db.Article.findOne(  { _id: req.params.id })
+  .populate("notes")
+  .then((dbArticle) => {
+    // If all Notes are successfully found, send them back to the client
+    console.log(dbArticle);
+    res.json(dbArticle);
+  })
+  .catch((err) => {
+    // If an error occurs, send the error back to the client
+    res.json(err);
+  });
+});
 /*
 router.post("/api/cats", (req, res) => {
   cat.create(["name", "sleepy"], [req.body.name, req.body.sleepy], result => {

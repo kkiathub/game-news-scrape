@@ -37,25 +37,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Routes
 
-// Route for grabbing a specific Article by id, populate it with it's note
-app.get("/articles/:id", (req, res) => {
-  // TODO
-  // ====
-  // Finish the route so it finds one article using the req.params.id,
-  // and run the populate method with "note",
-  // then responds with the article with the note included
-  db.Article.findOne(  { _id: req.params.id })
-  .populate("note")
-  .then((dbArticle) => {
-    // If all Notes are successfully found, send them back to the client
-    console.log(dbArticle);
-    res.json(dbArticle);
-  })
-  .catch((err) => {
-    // If an error occurs, send the error back to the client
-    res.json(err);
-  });
-});
+
 
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", (req, res) => {

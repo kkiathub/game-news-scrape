@@ -56,9 +56,9 @@
 
 				<!-- Modal content-->
 				<div class="modal-content">
-					<div class="modal-header">
-						<h2 class="modal-title"><strong>Rate this burger</strong></h2>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<div class="modal-header d-block py-2">
+						<h5 class="modal-title"><strong>Note for Article</strong></h5>
+						<h6 id="note-title"></h6>
 					</div>
 					<form id="devour-form">
 						<div class="form-group">
@@ -66,28 +66,10 @@
 								<label for="customer-name">Enter customer name</label>
 								<input class="form-control" id="customer-name" type="text" placeholder="name..."
 									required>
-								<div class="form-check-inline mt-3">
-									<label class="form-check-label">
-										<input type="radio" class="form-check-input" name="rating" value="1" required>1
-										(Meh...)
-									</label>
-									<label class="form-check-label">
-										<input type="radio" class="form-check-input" name="rating" value="2">2
-									</label>
-									<label class="form-check-label">
-										<input type="radio" class="form-check-input" name="rating" value="3">3
-									</label>
-									<label class="form-check-label">
-										<input type="radio" class="form-check-input" name="rating" value="4">4
-									</label>
-									<label class="form-check-label">
-										<input type="radio" class="form-check-input" name="rating" value="5">5
-										(Heavenly Delicious!)
-									</label>
-								</div>
 							</div>
 							<div class="modal-footer">
-								<button type="submit" id="btn-submit" class="btn btn-primary">Submit</button>
+								<button type="button" id="btn-note" class="btn btn-success">Add Note</button>
+								{{!-- <button type="button" id="btn-submit" class="btn btn-success">Submit</button> --}}
 								<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 							</div>
 						</div>

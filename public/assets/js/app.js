@@ -18,7 +18,7 @@ $(function () {
     );
   });
 
-  function updateSaved( id, bSaved) {
+  function updateSaved(id, bSaved) {
     $.ajax({
       method: "PUT",
       url: "/api/save/" + id,
@@ -26,45 +26,44 @@ $(function () {
         issaved: bSaved
       }
     })
-    .then(
-      function (result) {
-        // Reload the page to get the updated list
-        location.reload();
-      }
-    );
+      .then(
+        function (result) {
+          // Reload the page to get the updated list
+          location.reload();
+        }
+      );
   }
 
   $(".btn-save").on("click", function () {
-    // var thisId = $(this).attr("data-id");
-    updateSaved( $(this).attr("data-id"), true);
-    // console.log(thisId);
-    // $.ajax({
-    //   method: "PUT",
-    //   url: "/api/save/" + thisId,
-    //   data: {
-    //     issaved: true
-    //   }
-    // })
-    // .then(
-    //   function (result) {
-    //     // Reload the page to get the updated list
-    //     location.reload();
-    //   }
-    // );
+    updateSaved($(this).attr("data-id"), true);
   });
-  
+
   $(".btn-remove").on("click", function () {
     // remove from saved list.
-    updateSaved( $(this).attr("data-id"), false);
+    updateSaved($(this).attr("data-id"), false);
 
   });
 
   $(".btn-note").on("click", function () {
-    // add note
+    // Now make an ajax call for the Article
+    $.ajax({
+      method: "GET",
+      url: "/articles/" + $(this).attr("data-id")
+    })
+      // With that done, add the note information to the page
+      .then((data) => {
+        console.log(data);
+        // The title of the article
+
+
+        // add note
+        $("#note-title").text($(this).parent().find(".card-title").text());
+        $("#note-modal").modal("toggle");
+      });
   });
-    
-// --------------------- kktodo
-// not used fn;
+
+  // --------------------- kktodo
+  // not used fn;
   // Whenever someone clicks a p tag
   $(document).on("click", "p", function () {
     // Empty the notes from the note section

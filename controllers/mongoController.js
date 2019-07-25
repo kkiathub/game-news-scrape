@@ -37,25 +37,26 @@ router.get("/scrape", (req, res) => {
       result.image = $(this)
         .find("img")
         .attr("src");
+      console.log("article " + i);
+      console.log(result);
 
-      // Create a new Article using the `result` object built from scraping
+        // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
         .then((dbArticle) => {
           // View the added result in the console
           // console.log(dbArticle);
-
           if (i == numRec - 1) {
             console.log("get here... doone");
-            res.send("Scrape Complete");
+            // res.send("Scrape Complete");
           }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     });
 
     // Send a message to the client
-    // res.send("Scrape Complete");
+    res.send("Scrape Complete");
   })
     .catch(err => {
       console.log(err);
@@ -65,7 +66,8 @@ router.get("/scrape", (req, res) => {
 // Create all our routes and set up logic within those routes where required.
 function findArticles(bSaved, handlebar, res) {
   db.Article.find({ issaved: bSaved })
-    .then((dbArticle) => {
+  .then((dbArticle) => {
+    console.log("..." + dbArticle.length);
       // If all Users are successfully found, send them back to the client
       const hbsObject = {
         articles: dbArticle,
@@ -82,6 +84,7 @@ function findArticles(bSaved, handlebar, res) {
 }
 
 router.get("/", (req, res) => {
+  console.log("received reload request");
   findArticles(false, "index", res);
 });
 
